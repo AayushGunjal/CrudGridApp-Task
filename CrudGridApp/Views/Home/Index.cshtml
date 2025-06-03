@@ -1,0 +1,36 @@
+﻿@model IEnumerable<CrudGridApp.Models.Employee>
+
+<h2 class="text-center my-4">Employee Directory</h2>
+
+<a class="btn btn-dark mb-3" asp-action="Create">
+    <i class="bi bi-plus-lg"></i> Add Employee
+</a>
+
+<table class="table table-bordered table-hover shadow-sm rounded">
+    <thead class="table-dark">
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Position</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Name</td>
+                <td>@item.Email</td>
+                <td>@item.Position</td>
+                <td>
+                    <a class="btn btn-sm btn-outline-primary me-1" asp-action="Edit" asp-route-id="@item.Id">
+                        <i class="bi bi-pencil-fill"></i> Edit
+                    </a>
+                    <a class="btn btn-sm btn-outline-danger" asp-action="Delete" asp-route-id="@item.Id">
+                        <i class="bi bi-trash-fill"></i> Delete
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
