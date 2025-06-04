@@ -20,9 +20,28 @@ namespace CrudGridApp.Controllers
         }
 
         // GET: Employees
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(
+    string nameFilter,
+    string emailFilter,
+    string positionFilter,
+    int? quantityFilter,
+    decimal? rateFilter)
         {
-            return View(await _context.Employees.ToListAsync());
+            var query = _context.Employees.AsQueryable();
+
+            if (!string.IsNullOrEmpty(nameFilter))
+                query = query.Where(e => e.Name.Contains(nameFilter));
+            if (!string.IsNullOrEmpty(emailFilter))
+                query = query.Where(e => e.Email.Contains(emailFilter));
+            if (!string.IsNullOrEmpty(positionFilter))
+                query = query.Where(e => e.Position.Contains(positionFilter));
+            if (quantityFilter.HasValue)
+                query = query.Where(e => e.Quantity == quantityFilter.Value);
+            if (rateFilter.HasValue)
+                query = query.Where(e => e.Rate == rateFilter.Value);
+
+            var employees = await query.ToListAsync();
+            return View(employees);
         }
 
         // GET: Employees/Details/5
@@ -50,11 +69,9 @@ namespace CrudGridApp.Controllers
         }
 
         // POST: Employees/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Email,Position")] Employee employee)
+        public async Task<IActionResult> Create([Bind("Id,Name,Email,Position,Quantity,Rate")] Employee employee)
         {
             if (ModelState.IsValid)
             {
@@ -82,11 +99,9 @@ namespace CrudGridApp.Controllers
         }
 
         // POST: Employees/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Email,Position")] Employee employee)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Email,Position,Quantity,Rate")] Employee employee)
         {
             if (id != employee.Id)
             {

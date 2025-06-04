@@ -1,36 +1,72 @@
 ﻿@model IEnumerable<CrudGridApp.Models.Employee>
 
-<h2 class="text-center my-4">Employee Directory</h2>
+@{
+    ViewData["Title"] = "Employee Directory";
+}
 
-<a class="btn btn-dark mb-3" asp-action="Create">
-    <i class="bi bi-plus-lg"></i> Add Employee
-</a>
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="mb-0">Employee Directory</h2>
+        <a class="btn btn-primary" asp-action="Create">
+            <i class="bi bi-plus-lg"></i> Add Employee
+        </a>
+    </div>
 
-<table class="table table-bordered table-hover shadow-sm rounded">
-    <thead class="table-dark">
-        <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Position</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@item.Name</td>
-                <td>@item.Email</td>
-                <td>@item.Position</td>
-                <td>
-                    <a class="btn btn-sm btn-outline-primary me-1" asp-action="Edit" asp-route-id="@item.Id">
-                        <i class="bi bi-pencil-fill"></i> Edit
-                    </a>
-                    <a class="btn btn-sm btn-outline-danger" asp-action="Delete" asp-route-id="@item.Id">
-                        <i class="bi bi-trash-fill"></i> Delete
-                    </a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+    <form method="get" class="mb-0">
+        <table class="table table-bordered table-striped table-hover align-middle shadow-sm rounded">
+            <thead class="table-dark">
+                <tr>
+                    <th>
+                        <input type="text" name="nameFilter" class="form-control form-control-sm" placeholder="Name" value="@Context.Request.Query["nameFilter"]" style="max-width:120px;" />
+                    </th>
+                    <th>
+                        <input type="text" name="emailFilter" class="form-control form-control-sm" placeholder="Email" value="@Context.Request.Query["emailFilter"]" style="max-width:120px;" />
+                    </th>
+                    <th>
+                        <input type="text" name="positionFilter" class="form-control form-control-sm" placeholder="Position" value="@Context.Request.Query["positionFilter"]" style="max-width:120px;" />
+                    </th>
+                    <th>
+                        <input type="number" name="quantityFilter" class="form-control form-control-sm" placeholder="Qty" value="@Context.Request.Query["quantityFilter"]" style="max-width:80px;" />
+                    </th>
+                    <th>
+                        <input type="number" step="0.01" name="rateFilter" class="form-control form-control-sm" placeholder="Rate" value="@Context.Request.Query["rateFilter"]" style="max-width:80px;" />
+                    </th>
+                    <th>Total</th>
+                    <th style="width:120px;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.Name</td>
+                        <td>@item.Email</td>
+                        <td>@item.Position</td>
+                        <td>@item.Quantity</td>
+                        <td>@item.Rate</td>
+                        <td>@item.Total</td>
+                        <td>
+                            <a class="btn btn-sm btn-outline-primary me-1" asp-action="Edit" asp-route-id="@item.Id" title="Edit">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                            <a class="btn btn-sm btn-outline-danger" asp-action="Delete" asp-route-id="@item.Id" title="Delete">
+                                <i class="bi bi-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </form>
+</div>
+
+@section Scripts {
+    <script>
+        // Auto-submit filter form on input change
+        document.querySelectorAll('input[name$="Filter"]').forEach(function(input) {
+            input.addEventListener('change', function() {
+                input.form.submit();
+            });
+        });
+    </script>
+}
